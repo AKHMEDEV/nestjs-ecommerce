@@ -1,5 +1,5 @@
-// 📁 src/user/user.service.ts
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
@@ -14,7 +14,7 @@ import {
   UserResponse,
 } from './user.interface';
 import { UserTableModel } from './models/user.model';
-import { getAllUsers } from './test';
+import { getAllUsers } from './getAllUsersQuery';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -46,10 +46,7 @@ export class UserService implements OnModuleInit {
       );
       return { message: 'success', data: result };
     } catch (error) {
-      if (error.code === '23505') {
-        throw new ConflictException('This email is already registered');
-      }
-      throw new InternalServerErrorException(error.message);
+      throw new ConflictException("user already exist try another");
     }
   }
 
@@ -59,16 +56,17 @@ export class UserService implements OnModuleInit {
         'UPDATE users SET full_name = $2, email = $3, password = $4 WHERE id = $1 RETURNING *',
         [id, body.full_name, body.email, body.password],
       );
-
-      if (!result || result.length === 0) {
+      
+      if (result.rowCount === 0) {
         throw new NotFoundException('User not found');
       }
-
-      return { message: 'success', data: result };
+      
+      return { message: 'success', data: result};
+      
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException(
-          'This email is already used by another user',
+          'this email is already used by another user',
         );
       }
       throw new InternalServerErrorException(error.message);
@@ -88,7 +86,7 @@ export class UserService implements OnModuleInit {
 
       return { message: 'success', data: result };
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new ConflictException("user not found");
     }
   }
 }

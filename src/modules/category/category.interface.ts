@@ -1,4 +1,3 @@
-// 📁 src/category/interfaces/category.interface.ts
 export interface CreateCategoryRequest {
   name: string;
   description?: string;

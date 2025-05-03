@@ -1,4 +1,3 @@
-// 📁 src/category/category.service.ts
 import {
   ConflictException,
   Injectable,
@@ -14,8 +13,7 @@ import {
   CategoryResponse,
 } from './category.interface';
 import { CategoryTableModel } from './models/category.model';
-import { getAllCategories } from './test';
-
+import { getAllCategories } from './getAllCategoriesQuery';
 
 @Injectable()
 export class CategoryService implements OnModuleInit {
@@ -48,13 +46,13 @@ export class CategoryService implements OnModuleInit {
       return { message: 'success', data: result };
     } catch (error) {
       if (error.code === '23505') {
-        throw new ConflictException('This category already exists');
+        throw new ConflictException('category already exists');
       }
       throw new InternalServerErrorException(error.message);
     }
   }
 
-  async update(id: number, body: UpdateCategoryRequest): Promise<CategoryResponse> {
+  async update(id: number,body: UpdateCategoryRequest,): Promise<CategoryResponse> {
     try {
       const result = await this.pg.query(
         'UPDATE categories SET name = $2, description = $3, category_id = $4 WHERE id = $1 RETURNING *',
@@ -62,14 +60,11 @@ export class CategoryService implements OnModuleInit {
       );
 
       if (!result || result.length === 0) {
-        throw new NotFoundException('Category not found');
+        throw new NotFoundException('category not found');
       }
 
       return { message: 'success', data: result };
     } catch (error) {
-      if (error.code === '23505') {
-        throw new ConflictException('This category already exists');
-      }
       throw new InternalServerErrorException(error.message);
     }
   }
@@ -82,7 +77,7 @@ export class CategoryService implements OnModuleInit {
       );
 
       if (!result || result.length === 0) {
-        throw new NotFoundException('Category not found or already deleted');
+        throw new NotFoundException('category not found');
       }
 
       return { message: 'success', data: result };

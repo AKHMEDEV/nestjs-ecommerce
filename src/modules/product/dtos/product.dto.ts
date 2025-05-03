@@ -10,6 +10,7 @@ export class CreateProductDto {
   description?: string;
 
   @IsNumber()
+  @IsNotEmpty()
   price: number;
 
   @IsString()
@@ -20,6 +21,8 @@ export class CreateProductDto {
   @IsOptional()
   category_id?: number;
 }
+
+
 
 export class UpdateProductDto {
   @IsString()

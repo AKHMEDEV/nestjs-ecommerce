@@ -1,4 +1,3 @@
-// 📁 src/user/user.controller.ts
 import {
   Body,
   Controller,
@@ -27,10 +26,7 @@ export class UserController {
   }
 
   @Put(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() body: UpdateUserDto,
-  ) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateUserDto) {
     return this.userService.update(id, body);
   }
 

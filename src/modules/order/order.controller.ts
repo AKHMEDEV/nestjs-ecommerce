@@ -26,7 +26,10 @@ export class OrderController {
   }
 
   @Put(':id')
-  async update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateOrderDto) {
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateOrderDto,
+  ) {
     return await this.orderService.update(id, body);
   }
 

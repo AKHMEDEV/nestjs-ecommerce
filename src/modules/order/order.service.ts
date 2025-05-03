@@ -1,5 +1,4 @@
 import {
-  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -50,9 +49,8 @@ export class OrderService {
     );
 
     if (!result || result.length === 0) {
-      throw new NotFoundException('Order not found');
+      throw new NotFoundException('order not found');
     }
-
     return { message: 'success', data: result };
   }
 
@@ -61,11 +59,12 @@ export class OrderService {
       'DELETE FROM orders WHERE id = $1 RETURNING *',
       [id],
     );
-
-    if (!result || result.length === 0) {
-      throw new NotFoundException('Order not found or already deleted');
+  
+    if (!result || result.rowCount === 0) {
+      throw new NotFoundException('order not found');
     }
-
-    return { message: 'success', data: result };
+  
+    return { message: 'success', data: result};
   }
+  
 }

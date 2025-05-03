@@ -1,4 +1,3 @@
-// Category jadvalini yaratish
 export const CategoryTableModel = `
   CREATE TABLE IF NOT EXISTS categories (
     id SERIAL PRIMARY KEY,

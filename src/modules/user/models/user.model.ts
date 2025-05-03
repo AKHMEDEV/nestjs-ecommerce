@@ -1,4 +1,3 @@
-// 📁 src/user/models/user.model.ts
 export const UserTableModel = ` 
   CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
