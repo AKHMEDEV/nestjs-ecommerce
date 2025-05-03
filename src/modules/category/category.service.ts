@@ -1,75 +1,93 @@
-import {Injectable } from '@nestjs/common';
+// 📁 src/category/category.service.ts
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
 import { PostgresService } from 'src/database/db';
 import {
   CreateCategoryRequest,
+  GetCategoriesResponse,
   UpdateCategoryRequest,
   CategoryResponse,
-  GetCategoriesResponse,
 } from './category.interface';
-import { CategoryTableModel } from './models';
+import { CategoryTableModel } from './models/category.model';
+import { getAllCategories } from './test';
+
 
 @Injectable()
-export class CategoryService {
+export class CategoryService implements OnModuleInit {
   constructor(private readonly pg: PostgresService) {}
 
   async onModuleInit() {
+    await this.pg.query(CategoryTableModel);
+    console.log('category table created ✅');
+  }
+
+  async getAll(): Promise<GetCategoriesResponse> {
     try {
-      await this.pg.query(CategoryTableModel);
-      console.log('Category table yaratildi✅');
+      const categories = await this.pg.query(getAllCategories);
+      return {
+        message: 'success',
+        count: categories.length,
+        data: categories,
+      };
     } catch (error) {
-      console.log('Category table yaratishda xatolik ❌');
+      throw new InternalServerErrorException(error.message);
     }
   }
 
-  async getAllCategories(): Promise<GetCategoriesResponse> {
-    const categories = await this.pg.query(
-      `SELECT p.id, p.name, json_agg(json_build_object('id', c.id, 'name', c.name)) as subcategories 
-            FROM categories p
-            LEFT JOIN categories c ON c.category_id = p.id
-            GROUP BY p.id, p.name
-            HAVING p.category_id IS NULL;`,
-    );
-    return {
-      message: 'success',
-      count: categories.length,
-      data: categories,
-    };
+  async create(body: CreateCategoryRequest): Promise<CategoryResponse> {
+    try {
+      const result = await this.pg.query(
+        'INSERT INTO categories(name, description, category_id) VALUES($1, $2, $3) RETURNING *',
+        [body.name, body.description, body.category_id],
+      );
+      return { message: 'success', data: result };
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ConflictException('This category already exists');
+      }
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
-  async createCategory(payload: CreateCategoryRequest,): Promise<CategoryResponse> {
-    const category = await this.pg.query(
-      'INSERT INTO categories(name, category_id) VALUES ($1, $2) RETURNING *',
-      [payload.name, payload.category_id],
-    );
+  async update(id: number, body: UpdateCategoryRequest): Promise<CategoryResponse> {
+    try {
+      const result = await this.pg.query(
+        'UPDATE categories SET name = $2, description = $3, category_id = $4 WHERE id = $1 RETURNING *',
+        [id, body.name, body.description, body.category_id],
+      );
 
-    return {
-      message: 'success',
-      data: category,
-    };
+      if (!result || result.length === 0) {
+        throw new NotFoundException('Category not found');
+      }
+
+      return { message: 'success', data: result };
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ConflictException('This category already exists');
+      }
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
-  async deleteCategory(id: number): Promise<CategoryResponse> {
-    const category = await this.pg.query(
-      `DELETE FROM categories WHERE id = $1 RETURNING *;`,
-      [id],
-    );
-    return {
-      message: 'success',
-      data: category,
-    };
-  }
+  async delete(id: number): Promise<CategoryResponse> {
+    try {
+      const result = await this.pg.query(
+        'DELETE FROM categories WHERE id = $1 RETURNING *',
+        [id],
+      );
 
-  async updateCategory(
-    id: number,
-    payload: UpdateCategoryRequest,
-  ): Promise<CategoryResponse> {
-    const category = await this.pg.query(
-      'UPDATE categories SET name = $2 WHERE id = $1 RETURNING *;',
-      [id, payload.name],
-    );
-    return {
-      message: 'success',
-      data: category,
-    };
+      if (!result || result.length === 0) {
+        throw new NotFoundException('Category not found or already deleted');
+      }
+
+      return { message: 'success', data: result };
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 }

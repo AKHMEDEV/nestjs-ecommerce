@@ -1,27 +1,22 @@
-import { IsInt, IsNotEmpty, IsPositive, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateOrderDto {
-  @IsInt()
-  @IsPositive()
-  user_id: number;
-
   @IsString()
   @IsNotEmpty()
   product_name: string;
 
-  @IsInt()
-  @IsPositive()
+  @IsNumber()
   quantity: number;
 
-  @IsInt()
-  @IsPositive()
+  @IsNumber()
   total_price: number;
+
+  @IsNumber()
+  user_id: number;
 }
 
-  export class UpdateOrderDto {
-    product_name?: string;
-    quantity?: number;
-    total_price?: number;
-    status?: string;
-  }
-  
+export class UpdateOrderDto {
+  product_name?: string;
+  quantity?: number;
+  total_price?: number;
+}

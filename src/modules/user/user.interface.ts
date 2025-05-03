@@ -1,3 +1,4 @@
+// 📁 src/user/interfaces/user.interface.ts
 export interface CreateUserRequest {
   full_name: string;
   email: string;

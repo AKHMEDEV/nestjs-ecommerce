@@ -7,7 +7,7 @@ import {
   UserModule,
 } from './modules';
 import { HttpExceptionFilter } from './filter';
-import { APP_FILTER, APP_INTERCEPTOR, NestFactory } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR} from '@nestjs/core';
 import { loggingIntercepter } from './interceptors/logging.intersapter';
 
 @Module({

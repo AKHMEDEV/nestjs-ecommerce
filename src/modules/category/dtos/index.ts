@@ -1,2 +1,2 @@
-export * from './createCategory.dto';
-export * from './getAllCategories.dto';
+export * from './category.dto';
+

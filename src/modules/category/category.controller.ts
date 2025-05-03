@@ -1,3 +1,4 @@
+// 📁 src/category/category.controller.ts
 import {
   Body,
   Controller,
@@ -7,32 +8,34 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto, GetAllCategoriesQueryDto } from './dtos';
+import { CreateCategoryDto, UpdateCategoryDto } from './dtos/category.dto';
 
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
-  async getAllCategories(@Query() queries: GetAllCategoriesQueryDto) {
-    return await this.categoryService.getAllCategories();
+  getAll() {
+    return this.categoryService.getAll();
   }
 
   @Post()
-  async createCategory(@Body() body: CreateCategoryDto) {
-    return await this.categoryService.createCategory(body);
-  }
-
-  @Delete(':id')
-  async deleteCategory(@Param('id', ParseIntPipe) id: number) {
-    return await this.categoryService.deleteCategory(id);
+  create(@Body() body: CreateCategoryDto) {
+    return this.categoryService.create(body);
   }
 
   @Put(':id')
-  async updateCategory(@Param() params: any, @Body() body: any) {
-    return await this.categoryService.updateCategory(+params?.id, body);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateCategoryDto,
+  ) {
+    return this.categoryService.update(id, body);
+  }
+
+  @Delete(':id')
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.categoryService.delete(id);
   }
 }

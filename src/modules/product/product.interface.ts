@@ -1,23 +1,27 @@
-export interface CreateProductFace{
+export interface CreateProductRequest {
     name: string;
-    count: number;
+    description?: string;
     price: number;
-    category_id: number;
-}
-
-export interface UpdateProductFace{
-    name: string;
-    count: number;
-    price: number;
-}
-
-export interface GetAllProductsResponse<T = any>{
+    image_url?: string;
+    category_id?: number;
+  }
+  
+  export interface UpdateProductRequest {
+    name?: string;
+    description?: string;
+    price?: number;
+    image_url?: string;
+    category_id?: number;
+  }
+  
+  export interface ProductResponse {
+    message: string;
+    data: any;
+  }
+  
+  export interface GetProductsResponse {
     message: string;
     count: number;
-    data: T;
-}
-
-export interface ProductResponse<T = any>{
-    message: string;
-    data: T;
-}
+    data: any[];
+  }
+  

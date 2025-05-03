@@ -1,35 +1,41 @@
+// 📁 src/user/user.service.ts
 import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import { PostgresService } from 'src/database/db';
 import {
   CreateUserRequest,
+  GetUsersResponse,
   UpdateUserRequest,
   UserResponse,
-  GetUsersResponse,
 } from './user.interface';
 import { UserTableModel } from './models/user.model';
 import { getAllUsers } from './test';
 
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit {
   constructor(private readonly pg: PostgresService) {}
 
   async onModuleInit() {
     await this.pg.query(UserTableModel);
-    console.log('✅ User table created');
+    console.log('user table created ✅');
   }
 
   async getAll(): Promise<GetUsersResponse> {
-    const usersWithOrders = await this.pg.query(getAllUsers);
-    return {
-      message: 'success',
-      count: usersWithOrders.length,
-      data: usersWithOrders,
-    };
+    try {
+      const usersWithOrders = await this.pg.query(getAllUsers);
+      return {
+        message: 'success',
+        count: usersWithOrders.length,
+        data: usersWithOrders,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
   async create(body: CreateUserRequest): Promise<UserResponse> {
@@ -61,7 +67,9 @@ export class UserService {
       return { message: 'success', data: result };
     } catch (error) {
       if (error.code === '23505') {
-        throw new ConflictException('This email is already used by another user');
+        throw new ConflictException(
+          'This email is already used by another user',
+        );
       }
       throw new InternalServerErrorException(error.message);
     }

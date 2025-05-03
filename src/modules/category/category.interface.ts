@@ -1,5 +1,13 @@
+// 📁 src/category/interfaces/category.interface.ts
 export interface CreateCategoryRequest {
   name: string;
+  description?: string;
+  category_id?: number;
+}
+
+export interface UpdateCategoryRequest {
+  name?: string;
+  description?: string;
   category_id?: number;
 }
 
@@ -8,12 +16,8 @@ export interface CategoryResponse {
   data: any;
 }
 
-export interface UpdateCategoryRequest {
-  name: string;
-}
-
 export interface GetCategoriesResponse {
   message: string;
   count: number;
-  data: any;
+  data: any[];
 }
