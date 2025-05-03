@@ -1,4 +1,4 @@
-# 🛍️ Mini E-Commerce Backend (NestJS + SQLShell)
+# Mini E-Commerce Backend (NestJS + SQLShell)
 
 Bu loyiha kichikroq e-commerce backend tizimi bo‘lib, `NestJS` frameworkida yozilgan. Loyha SQLShell orqali ma’lumotlar bazasiga ulanadi va avtomatik ravishda jadval (table) larni yaratadi. Har bir modul mustaqil shaklda tuzilgan va modular arxitekturani qo‘llaydi.
 
