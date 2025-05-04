@@ -45,10 +45,7 @@ export class CategoryService implements OnModuleInit {
       );
       return { message: 'success', data: result };
     } catch (error) {
-      if (error.code === '23505') {
-        throw new ConflictException('category already exists');
-      }
-      throw new InternalServerErrorException(error.message);
+      throw new ConflictException("category allready exists try another")
     }
   }
 

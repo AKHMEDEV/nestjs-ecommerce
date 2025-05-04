@@ -1,7 +1,8 @@
-import { IsNotEmpty, IsOptional, IsString, IsInt } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsInt, Min, Max } from 'class-validator';
 
 export class CreateCategoryDto {
   @IsString()
+  // @Max (1)
   @IsNotEmpty()
   name: string;
 
