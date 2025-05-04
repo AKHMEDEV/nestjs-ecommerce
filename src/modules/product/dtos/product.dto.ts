@@ -1,47 +1,50 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateProductDto {
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: "name matn bo'lishi kerak" })
+  @IsNotEmpty({ message: "name bo'sh bo'lmasligi kerak" })
   name: string;
 
-  @IsString()
+  @IsString({ message: "description matn bo'lishi kerak" })
   @IsOptional()
   description?: string;
 
-  @IsNumber()
-  @IsNotEmpty()
+  @IsNumber({}, { message: "price raqam bo'lishi kerak" })
+  @IsNotEmpty({ message: "price bo'sh bo'lmasligi kerak" })
   price: number;
 
-  @IsString()
+  @IsString({ message: "image_url matn bo'lishi kerak" })
   @IsOptional()
   image_url?: string;
 
-  @IsNumber()
+  @IsNumber({}, { message: "category_id raqam bo'lishi kerak" })
   @IsOptional()
   category_id?: number;
 }
 
-
-
 export class UpdateProductDto {
-  @IsString()
   @IsOptional()
+  @IsString({ message: "name matn bo'lishi kerak" })
   name?: string;
 
-  @IsString()
   @IsOptional()
+  @IsString({ message: "description matn bo'lishi kerak" })
   description?: string;
 
-  @IsNumber()
   @IsOptional()
+  @IsNumber({}, { message: "price raqam bo'lishi kerak" })
   price?: number;
 
-  @IsString()
   @IsOptional()
+  @IsString({ message: "image_url matn bo'lishi kerak" })
   image_url?: string;
 
-  @IsNumber()
   @IsOptional()
+  @IsNumber({}, { message: "category_id raqam bo'lishi kerak" })
   category_id?: number;
 }

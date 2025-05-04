@@ -1,34 +1,34 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateOrderDto {
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: "product_name matn bo'lishi kerak" })
+  @IsNotEmpty({ message: "product_name bo'sh bo'lmasligi kerak" })
   product_name: string;
 
-  @IsNumber()
+  @IsNumber({}, { message: "quantity raqam bo'lishi kerak" })
   quantity: number;
 
-  @IsNumber()
+  @IsNumber({}, { message: "total_price raqam bo'lishi kerak" })
   total_price: number;
 
-  @IsNumber()
+  @IsNumber({}, { message: "user_id raqam bo'lishi kerak" })
   user_id: number;
 }
 
 export class UpdateOrderDto {
   @IsOptional()
-  @IsNumber()
+  @IsNumber({}, { message: "user_id raqam bo'lishi kerak" })
   user_id?: number;
 
   @IsOptional()
-  @IsString()
+  @IsString({ message: "product_name matn bo'lishi kerak" })
   product_name?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({}, { message: "quantity raqam bo'lishi kerak" })
   quantity?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({}, { message: "total_price raqam bo'lishi kerak" })
   total_price?: number;
 }
