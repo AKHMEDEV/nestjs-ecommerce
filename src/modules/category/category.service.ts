@@ -14,10 +14,11 @@ import {
 } from './category.interface';
 import { CategoryTableModel } from './models/category.model';
 import { getAllCategories } from './getAllCategoriesQuery';
+import { FsHelper } from 'src/helper';
 
 @Injectable()
 export class CategoryService implements OnModuleInit {
-  constructor(private readonly pg: PostgresService) {}
+  constructor(private readonly pg: PostgresService, private fs:FsHelper) {}
 
   async onModuleInit() {
     await this.pg.query(CategoryTableModel);
@@ -37,8 +38,11 @@ export class CategoryService implements OnModuleInit {
     }
   }
 
-  async create(body: CreateCategoryRequest): Promise<CategoryResponse> {
+  async create(body: CreateCategoryRequest, image:Express.Multer.File): Promise<CategoryResponse> {
     try {
+      const categoryImage  = await this.fs.uploadFile(image)
+      console.log(categoryImage);
+      
       const result = await this.pg.query(
         'INSERT INTO categories(name, description, category_id) VALUES($1, $2, $3) RETURNING *',
         [body.name, body.description, body.category_id],
