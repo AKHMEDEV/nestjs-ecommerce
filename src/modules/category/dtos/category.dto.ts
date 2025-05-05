@@ -10,7 +10,6 @@ export class CreateCategoryDto {
   @IsOptional()
   description?: string;
 
-  @IsInt({ message: "category_id butun son bo'lishi kerak" })
   @IsOptional()
   category_id?: number;
 }

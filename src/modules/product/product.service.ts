@@ -33,8 +33,8 @@ export class ProductService {
 
   async create(body: CreateProductRequest): Promise<ProductResponse> {
     try {
-      console.log("Creating product with data:", body); // Log yaratish
-  
+      console.log('Creating product with data:', body); // Log yaratish
+
       const result = await this.pg.query(
         `INSERT INTO products(name, description, price, image_url, category_id)
          VALUES($1, $2, $3, $4, $5) RETURNING *`,
@@ -46,18 +46,17 @@ export class ProductService {
           body.category_id,
         ],
       );
-  
-      console.log("Product created successfully:", result); // L chiqarish
-    
-      return { message: 'success', data: result};
+
+      console.log('Product created successfully:', result); // L chiqarish
+
+      return { message: 'success', data: result };
     } catch (error) {
-      console.error("Error in product creation:", error); // Xatolikni loglash
-      throw new InternalServerErrorException('Product creatjhjgffghjion failed');
+      console.error('Error in product creation:', error); // Xatolikni loglash
+      throw new InternalServerErrorException(
+        'Product creatjhjgffghjion failed',
+      );
     }
   }
-  
-  
-  
 
   async update(
     id: number,
